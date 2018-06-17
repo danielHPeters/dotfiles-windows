@@ -24,7 +24,6 @@ Get-PackageProvider NuGet -Force | Out-Null
 
 ### Install PowerShell Modules
 Write-Host "Installing PowerShell Modules..." -ForegroundColor "Yellow"
-Install-Module Posh-Git -Scope CurrentUser -Force
 Install-Module PSWindowsUpdate -Scope CurrentUser -Force
 
 
@@ -32,39 +31,62 @@ Install-Module PSWindowsUpdate -Scope CurrentUser -Force
 Write-Host "Installing Desktop Utilities..." -ForegroundColor "Yellow"
 if ((which cinst) -eq $null) {
     iex (new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1')
+    iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
     Refresh-Environment
     choco feature enable -n=allowGlobalConfirmation
 }
 
 # system and cli
+scoop install pshazz
+scoop install gcc
 choco install curl                --limit-output
+choco install wget                --limit-output
 choco install nuget.commandline   --limit-output
 choco install webpi               --limit-output
-choco install git.install         --limit-output -params '"/GitAndUnixToolsOnPath /NoShellIntegration"'
+choco install ack                 --limit-output
+choco install grep                --limit-output
+choco install git.install         --limit-output -params '"/GitAndUnixToolsOnPath"'
+choco install gpg4win             --limit-output
 choco install nvm.portable        --limit-output
 choco install ruby                --limit-output
+choco install groovy              --limit-output
+choco install kotlin              --limit-output
+choco install gradle              --limit-output
+choco install androidstudio       --limit-output
+choco install zulu                --limit-output #Openjdk
+choco install freepascal          --limit-output
+choco install strawberryperl      --limit-output
+choco install nodejs              --limit-output
+choco install php                 --limit-output
 
 # browsers
-choco install GoogleChrome        --limit-output
-choco install GoogleChrome.Canary --limit-output
-choco install Firefox             --limit-output
-choco install Opera               --limit-output
+choco install googlechrome        --limit-output
+choco install firefox             --limit-output
+choco install opera               --limit-output
+choco install vivaldi             --limit-output
 
 # dev tools and frameworks
-choco install atom                --limit-output
-choco install Fiddler4            --limit-output
+choco install vscode              --limit-output
 choco install vim                 --limit-output
 choco install winmerge            --limit-output
+choco install grails              --limit-output
+choco install vagrant             --limit-output
+choco install scenebuilder9       --limit-output
+
+# other programs
+choco install vlc                 --limit-output
+choco install foobar2000          --limit-output
+choco install skype               --limit-output
+choco install filezilla           --limit-output
+choco install geogebra            --limit-output
 
 Refresh-Environment
 
 nvm on
-$nodeLtsVersion = choco search nodejs-lts --limit-output | ConvertFrom-String -TemplateContent "{Name:package-name}\|{Version:1.11.1}" | Select -ExpandProperty "Version"
-nvm install $nodeLtsVersion
-nvm use $nodeLtsVersion
-Remove-Variable nodeLtsVersion
+nvm install --lts
 
 gem pristine --all --env-shebang
+
 
 ### Windows Features
 Write-Host "Installing Windows Features..." -ForegroundColor "Yellow"
@@ -105,11 +127,16 @@ webpicmd /Install /AcceptEula /Products:"Python279"
 ### Node Packages
 Write-Host "Installing Node Packages..." -ForegroundColor "Yellow"
 if (which npm) {
-    npm update npm
+    npm install -g npm
     npm install -g gulp
     npm install -g mocha
-    npm install -g node-inspector
-    npm install -g yo
+    npm install -g chai
+	npm install -g nodemon
+	npm install -g @angular/cli
+	npm install -g express-generator
+	npm install -g typescript
+    npm install -g coffeescript
+    npm install -g create-react-native-app
 }
 
 ### Janus for vim
